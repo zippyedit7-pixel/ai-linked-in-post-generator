@@ -9,26 +9,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: "You are a professional LinkedIn content writer." },
-          { role: "user", content: prompt }
-        ],
-        temperature: 0.7
+        model: "gpt-4.1-mini",
+        input: prompt
       })
     });
 
     const data = await response.json();
-    res.status(200).json({ text: data.choices[0].message.content });
 
-  } catch (err) {
-    res.status(500).json({ error: "Something went wrong" });
+    return res.status(200).json({
+      text: data.output_text
+    });
+
+  } catch (error) {
+    return res.status(500).json({ error: "Something went wrong" });
   }
 }
