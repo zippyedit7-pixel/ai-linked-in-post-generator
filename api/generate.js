@@ -1,36 +1,40 @@
+import OpenAI from "openai";
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   const { prompt } = req.body;
+
   if (!prompt) {
     return res.status(400).json({ error: "Prompt is required" });
   }
 
   try {
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        input: prompt
-      })
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
     });
 
-    const data = await response.json();
-    
-const output =
-  data.output_text ||
-  data.output?.[0]?.content?.[0]?.text ||
-  "No response from AI";
-    return res.status(200).json({
-      text: output
+    const completion = await client.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant that writes LinkedIn posts.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    });
 
+    return res.status(200).json({
+      result: completion.choices[0].message.content,
+    });
   } catch (error) {
-    return res.status(500).json({ error: "Something went wrong" });
+    console.error("OpenAI error:", error);
+    return res.status(500).json({ error: "OpenAI request failed" });
   }
 }
