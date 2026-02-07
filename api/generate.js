@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   const { prompt } = req.body;
 
   if (!prompt) {
-    return res.status(400).json({ error: "Prompt missing" });
+    return res.status(400).json({ error: "Prompt is required" });
   }
 
   try {
@@ -14,26 +14,30 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
         messages: [
           {
+            role: "system",
+            content: "You are a professional LinkedIn content writer.",
+          },
+          {
             role: "user",
-            content: `Create a professional LinkedIn post in simple Hinglish based on this: ${prompt}`
-          }
-        ]
-      })
+            content: prompt,
+          },
+        ],
+        temperature: 0.7,
+      }),
     });
 
     const data = await response.json();
 
-    res.status(200).json({
-      text: data.choices[0].message.content
+    return res.status(200).json({
+      text: data.choices[0].message.content,
     });
-
   } catch (error) {
-    res.status(500).json({ error: "AI error" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 }
