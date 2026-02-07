@@ -22,10 +22,13 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-
+    
+const output =
+  data.output_text ||
+  data.output?.[0]?.content?.[0]?.text ||
+  "No response from AI";
     return res.status(200).json({
-      text: data.output_text
-    });
+      text: output
 
   } catch (error) {
     return res.status(500).json({ error: "Something went wrong" });
