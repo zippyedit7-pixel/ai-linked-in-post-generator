@@ -25,5 +25,7 @@ export default async function handler(req, res) {
       result: response.output_text,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(
+    console.error("OpenAI error:", error);
+    return res.status(500).json({ error: "OpenAI request failed" });
+  }
+}
