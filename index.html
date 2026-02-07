@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>AI LinkedIn Post Generator</title>
 </head>
 <body>
+
   <h1>AI LinkedIn Post Generator 🚀</h1>
-  <p>Your website is live now!</p>
+
+  <textarea id="input" placeholder="Yahan kuch likho..." rows="5" cols="40"></textarea>
+  <br><br>
+
+  <button onclick="generate()">Generate Post</button>
+
+  <p id="output"></p>
+
+  <script>
+    function generate() {
+      const text = document.getElementById("input").value;
+      document.getElementById("output").innerText =
+        "Tumne likha: " + text;
+    }
+  </script>
+
 </body>
 </html>
