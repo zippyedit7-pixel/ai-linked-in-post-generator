@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>AI LinkedIn Post Generator</title>
 </head>
 <body>
 
   <h1>AI LinkedIn Post Generator 🚀</h1>
 
-  <textarea id="input" placeholder="Yahan kuch likho..." rows="5" cols="40"></textarea>
+  <textarea id="input" rows="5" cols="40" placeholder="Yahan kuch likho..."></textarea>
   <br><br>
 
   <button onclick="generate()">Generate Post</button>
@@ -16,10 +16,19 @@
   <p id="output"></p>
 
   <script>
-    function generate() {
-      const text = document.getElementById("input").value;
-      document.getElementById("output").innerText =
-        "Tumne likha: " + text;
+    async function generate() {
+      const userInput = document.getElementById("input").value;
+
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt: userInput })
+      });
+
+      const data = await response.json();
+      document.getElementById("output").innerText = data.text;
     }
   </script>
 
