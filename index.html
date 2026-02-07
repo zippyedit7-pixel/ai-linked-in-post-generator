@@ -1,36 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>AI LinkedIn Post Generator</title>
-</head>
-<body>
+<script>
+  async function generate() {
+    const userInput = document.getElementById("input").value;
 
-  <h1>AI LinkedIn Post Generator 🚀</h1>
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt: userInput })
+    });
 
-  <textarea id="input" rows="5" cols="40" placeholder="Yahan kuch likho..."></textarea>
-  <br><br>
-
-  <button onclick="generate()">Generate Post</button>
-
-  <p id="output"></p>
-
-  <script>
-    async function generate() {
-      const userInput = document.getElementById("input").value;
-
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt: userInput })
-      });
-
-      const data = await response.json();
-      document.getElementById("output").innerText = data.text;
-    }
-  </script>
-
-</body>
-</html>
+    const data = await response.json();
+    document.getElementById("output").innerText = data.text;
+  }
+</script>
