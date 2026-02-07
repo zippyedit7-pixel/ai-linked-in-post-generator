@@ -1,12 +1,14 @@
 import OpenAI from "openai";
 
 export default async function handler(req, res) {
+  // Only POST allowed
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   const { prompt } = req.body;
 
+  // Prompt required
   if (!prompt) {
     return res.status(400).json({ error: "Prompt is required" });
   }
@@ -26,6 +28,8 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error("OpenAI error:", error);
-    return res.status(500).json({ error: "OpenAI request failed" });
+    return res.status(500).json({
+      error: "OpenAI request failed",
+    });
   }
 }
